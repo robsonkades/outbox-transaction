@@ -1,7 +1,9 @@
-package br.com.robsonkades.agendadordistribuido;
+package br.com.robsonkades.agendadordistribuido.job;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,13 +18,22 @@ public class OutboxEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "aggregate_id")
     private String aggregateId;
+    @Column(name = "aggregate_type")
     private String aggregateType;
-    private String eventType;
+    @Column(name = "event_type")
+    @Enumerated(EnumType.ORDINAL)
+    private EventType eventType;
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String payload;
-    private String status = "PENDENTE";
-    private Instant createdAt = Instant.now();
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
+    @Column(name = "created_at")
+    private Instant createdAt;
+    @Column(name = "processed_at")
+    private Instant processedAt;
 
     public Long getId() {
         return id;
@@ -48,11 +59,11 @@ public class OutboxEvent {
         this.aggregateType = aggregateType;
     }
 
-    public String getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 
@@ -64,11 +75,11 @@ public class OutboxEvent {
         this.payload = payload;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -78,5 +89,13 @@ public class OutboxEvent {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Instant getProcessedAt() {
+        return processedAt;
+    }
+
+    public void setProcessedAt(Instant processedAt) {
+        this.processedAt = processedAt;
     }
 }
