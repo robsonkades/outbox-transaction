@@ -67,6 +67,7 @@ Create the outbox_event table before running. DDL examples:
 
 SQL Server:
 
+```sql
 CREATE TABLE outbox_event (
     id BIGINT IDENTITY(1,1) NOT NULL,
     aggregate_id varchar(255) NOT NULL,
@@ -83,9 +84,11 @@ CREATE NONCLUSTERED INDEX IX_Outbox_Status_Event_Type_Covering
     ON outbox_event (status ASC, event_type ASC, id ASC)
     INCLUDE (aggregate_id, aggregate_type, payload, created_at, processed_at, retry_count)
     WITH (FILLFACTOR = 85, ONLINE = ON);
+```
 
 PostgreSQL:
 
+```sql
 CREATE TABLE outbox_event (
     id BIGSERIAL PRIMARY KEY,
     aggregate_id VARCHAR(255) NOT NULL,
@@ -98,11 +101,11 @@ CREATE TABLE outbox_event (
     retry_count SMALLINT NOT NULL DEFAULT 0
 );
 
-
 CREATE INDEX ix_outbox_processed_event_type_status_covering
     ON outbox_event (event_type ASC, status ASC, id ASC)
     INCLUDE (aggregate_id, aggregate_type, payload, created_at, processed_at, retry_count)
     WITH (FILLFACTOR = 85);
+```
 
 Note: event_type and status are stored as small numeric codes (enums in code).
 
