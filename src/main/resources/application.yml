@@ -1,17 +1,19 @@
+
 spring:
   application:
     name: agendador-distribuido
   datasource:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    password: ${SQL_PASSWORD:Sqlserver!@#}
-    url: ${SQL_JDBC:jdbc:sqlserver://localhost:1433;encrypt=false;databaseName=master;encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=false;ApplicationName=App}
-    username: sa
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver #org.postgresql.Driver
+    password: ${SQL_PASSWORD:Sqlserver!@#} #postgres
+    url:  ${SQL_JDBC:jdbc:sqlserver://localhost:1433;encrypt=false;databaseName=master;encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=false;ApplicationName=App} #jdbc:postgresql://localhost:5432/postgres
+    username: sa #postgres
     hikari:
       connection-timeout: 250 # É uma configuração em milliseconds. O ideal é manter baixo para que estoure timeout logo e não prenda as threads.
+      idle-timeout: 300000
       max-lifetime: 600000 # Tempo máximo que uma conexão pode ficar aberta (10 min) - security.
       maximum-pool-size: 20 # Mantemos até no máx 20 conexões com o banco de dados. O ideal é manter baixo mesmo, pois é algo custoso para o banco gerenciar. https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
       minimum-idle: 0
-      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver #org.postgresql.Driver
       auto-commit: false
       pool-name: "spring-scheduler-distributed"
       data-source-properties:
@@ -22,15 +24,15 @@ spring:
     hibernate:
       ddl-auto: none
     properties:
-      "[hibernate.dialect]": org.hibernate.dialect.SQLServerDialect
+      "[hibernate.dialect]": org.hibernate.dialect.SQLServerDialect #org.hibernate.dialect.PostgreSQLDialect
       "[hibernate.connection.provider_disables_autocommit]": true
-      "[hibernate.jdbc.batch_size]": 30
+      "[hibernate.jdbc.batch_size]": 50
       "[hibernate.jdbc.batch_versioned_data]": true
       "[hibernate.jdbc.fetch_size]": 50
       "[hibernate.order_updates]": true
       "[hibernate.generate_statistics]": false
       "[hibernate.show_sql]": false
-      "[hibernate.format_sql]": false
+      "[hibernate.format_sql]": true
       # Para aumentar a performance ao máximo, desabilitamos o auto-commit e o open-in-view.
       # https://vladmihalcea.com/why-you-should-always-use-hibernate-connection-provider_disables_autocommit-for-resource-local-jpa-transactions/
   sql:
@@ -59,8 +61,8 @@ server:
       io: 4 # One IO thread per CPU core is a reasonable default: https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#listeners-2
 
 management:
-  server:
-    port: 8090
+#  server:
+#    port: 8090
   endpoints:
     web:
       exposure:

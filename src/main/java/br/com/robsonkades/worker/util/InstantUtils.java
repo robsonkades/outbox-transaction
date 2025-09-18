@@ -1,4 +1,4 @@
-package br.com.robsonkades.agendadordistribuido.job;
+package br.com.robsonkades.worker.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

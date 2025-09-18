@@ -1,4 +1,4 @@
-package br.com.robsonkades.agendadordistribuido;
+package br.com.robsonkades.worker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,9 +6,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class AgendadorDistribuidoApplication {
+public class Main {
 
     public static void main(String[] args) {
-        SpringApplication.run(AgendadorDistribuidoApplication.class, args);
+        SpringApplication.run(Main.class, args);
     }
 }
